@@ -1,23 +1,38 @@
 <template>
-    <v-card>
-        <div style="display: flex; justify-content: space-between; width: 100%; padding: 5px;">
-        <h3 style="position: relative; top: 10px;">
-            Taks 1
-        </h3>
-        <div>
-            <v-tooltip text="Editar" location="top">
-                <template v-slot:activator="{ props }">
-                    <v-btn color="warning" v-bind="props" icon="mdi-square-edit-outline" class="mr-2"></v-btn>
-                </template>
-            </v-tooltip>
-
-            <v-tooltip text="Deltar" location="top">
-                <template v-slot:activator="{ props }">
-                    <v-btn icon="mdi-delete" v-bind="props" color="error"></v-btn>
-                </template>
-            </v-tooltip>
-
+    <v-card class="card-row" variant="elevated" :color="color">
+        <div class="content">
+            <h3>
+                {{ title }}
+            </h3>
+            <div>
+                <slot></slot>
+            </div>
         </div>
-    </div>
     </v-card>
 </template>
+<style lang="scss" setup>
+div.card-row {
+    width: 100%;
+
+    div.content {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: 5px;
+
+        h3 {
+            position: relative;
+            top: 10px;
+        }
+    }
+}
+</style>
+<script setup>
+    import { defineProps } from 'vue';
+
+    defineProps({
+        title:String,
+        color:String,
+    });
+</script>
+

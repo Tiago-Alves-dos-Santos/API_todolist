@@ -5,7 +5,13 @@
         </template>
     </v-tooltip>
 </template>
+
+<style>
+</style>
+
 <script setup>
+    import { defineProps } from 'vue';
+
     defineProps({
         text:String,
         icon:String,
