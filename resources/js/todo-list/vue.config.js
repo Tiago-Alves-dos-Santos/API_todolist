@@ -3,7 +3,7 @@ module.exports = defineConfig({
     outputDir: '../../../public/front',
     chainWebpack: (config) => {
         config.plugin('html').tap((args) => {
-            args[0].title = 'ToDoList'; // Altere 'Novo Título' para o título desejado
+            args[0].title = 'ToDoList';
             return args;
         });
     },
