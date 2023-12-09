@@ -16,6 +16,9 @@ class TaskController extends Controller
     public function update()
     {
     }
+    public function conclued()
+    {
+    }
     public function delete()
     {
     }
