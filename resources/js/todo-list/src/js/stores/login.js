@@ -11,8 +11,6 @@ export const useLoginStore = defineStore('login', {
             load: false
         }
     },
-    // could also be defined as
-    // state: () => ({ count: 0 })
     actions: {
         login() {
             this.load = true;
@@ -30,8 +28,6 @@ export const useLoginStore = defineStore('login', {
                     this.load = false;
                 }
             }).catch((error) => {
-                console.log(error);
-                console.log(error.response.data.errors);
                 this.errors = error.response.data.errors;
                 this.load = false;
             });
