@@ -19,11 +19,23 @@
 // import HelloWorld from '@/components/HelloWorld.vue'
 import CenterLayout from '@/layouts/CenterLayout.vue';
 import PasswordInput from '@/components/Input/PasswordInput.vue';
+import axios from 'axios';
 export default {
     name: 'HomeView',
     components: {
         CenterLayout,
         PasswordInput
+
+    },
+    mounted() {
+        axios.get('https://viacep.com.br/ws/01001000/json/')
+            .then(function (response) {
+                console.log(response.data);
+                console.log(response.status);
+                console.log(response.statusText);
+                console.log(response.headers);
+                console.log(response.config);
+            });
 
     }
 }
