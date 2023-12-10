@@ -22,6 +22,9 @@
                     <button-tooltip text="Editar" location="top" color="warning" icon="mdi-square-edit-outline" class="mr-2"
                         @click="update(value)" :loading="taskStore.loads.update == value.id"
                         :key="value.id"></button-tooltip>
+                    <button-tooltip text="Concluir" location="top" color="success" icon="mdi-check-bold" class="mr-2"
+                        @click="conclued(value)" :loading="taskStore.loads.conclude == value.id"
+                        :key="value.id"></button-tooltip>
                     <button-tooltip text="Deletar" location="top" color="error" icon="mdi-delete" class="mr-2"
                         @click="deleteTask(value)" :loading="taskStore.loads.delete == value.id"></button-tooltip>
                 </card-row>
@@ -87,6 +90,12 @@ function deleteTask(value) {
             input_task.value.focus();
         }
     });
+}
+function conclued(value) {
+    taskStore.conclued(value.id);
+    taskStore.read();
+    taskStore.form.title = '';
+    input_task.value.focus();
 }
 
 onMounted(() => {

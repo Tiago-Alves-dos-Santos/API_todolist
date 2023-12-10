@@ -58,7 +58,7 @@ class TaskController extends Controller
     public function conclued(Request $request)
     {
         Task::find($request->id)->update([
-            'conclued' => true,
+            'concluded' => true,
         ]);
         return [
             'status' => 'success',

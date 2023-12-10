@@ -8,13 +8,12 @@ export const useTaskStore = defineStore('task', {
             form: {
                 user_id: 0,
                 title: '',
-                conclude: false,
-                //load
             },
             loads: {
                 create: false,
                 update: -1,
                 delete: -1,
+                conclude: -1,
             },
             tasks: {},
             token: '',
@@ -97,6 +96,25 @@ export const useTaskStore = defineStore('task', {
             }).catch((error) => {
                 this.errors = error.response.data.errors;
                 this.loads.delete = -1;
+            });
+        },
+        conclued(id){
+            this.errors = {};
+            this.loads.conclude = id;
+            axios({
+                headers: {
+                    'Authorization': `Bearer ${this.token}`
+                },
+                method: API.task.operations.conclued.method,
+                url: API.task.operations.conclued.url,
+                data: {
+                    id: id,
+                }
+            }).then(() => {
+                this.loads.conclude = -1;
+            }).catch((error) => {
+                this.errors = error.response.data.errors;
+                this.loads.conclude = -1;
             });
         },
         search() {
