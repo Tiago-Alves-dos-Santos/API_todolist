@@ -17,6 +17,10 @@ API.task = {
             method: 'POST',
             url: API.url + 'task/create',
         },
+        read: {
+            method: 'GET',
+            url: API.url + 'task/',
+        },
         update: {
             method: 'PUT',
             url: API.url + 'task/update',

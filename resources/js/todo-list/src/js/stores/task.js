@@ -13,8 +13,9 @@ export const useTaskStore = defineStore('task', {
             },
             loads: {
                 create: false,
-                update: false
+                update: false,
             },
+            tasks: {},
             token: '',
             errors: {}
         }
@@ -40,6 +41,23 @@ export const useTaskStore = defineStore('task', {
             });
 
         },
+        async read() {
+            this.errors = {};
+            this.loads.read = true;
+            await axios({
+                headers: {
+                    'Authorization': `Bearer ${this.token}`
+                },
+                method: API.task.operations.read.method,
+                url: API.task.operations.read.url,
+            }).then((response) => {
+                this.tasks = response.data.tasks;
+                this.loads.read = false;
+            }).catch((error) => {
+                this.errors = error.response.data.errors;
+                this.loads.read = false;
+            });
+        },
         update(id) {
             this.errors = {};
             this.loads.update = true;
@@ -57,9 +75,6 @@ export const useTaskStore = defineStore('task', {
             });
         },
         delete() {
-            this.errors = {};
-        },
-        read() {
             this.errors = {};
         },
         search() {

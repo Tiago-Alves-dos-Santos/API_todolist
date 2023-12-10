@@ -15,7 +15,7 @@
                     </v-card>
                 </form>
                 <alert-erros :errors="taskStore.errors" class="mt-2"></alert-erros>
-                <card-row title="task 1" color="grey-lighten-2" class="mt-2">
+                <card-row :title="value.title" color="grey-lighten-2" class="mt-2" v-for="value in taskStore.tasks.data" :key="value.id">
                     <button-tooltip text="Editar" location="top" color="warning" icon="mdi-square-edit-outline"
                         class="mr-2"></button-tooltip>
                     <button-tooltip text="Deletar" location="top" color="error" icon="mdi-delete"
@@ -38,8 +38,9 @@ const taskStore = useTaskStore();
 
 const input_task = ref(null);
 
-function create(){
+async function create(){
     taskStore.create();
+    await taskStore.read();
     taskStore.form.title = '';
     input_task.value.focus();
 }
@@ -47,6 +48,8 @@ function create(){
 onMounted(() => {
     if (window.check()) {
         taskStore.token = localStorage.getItem('token');
+        taskStore.read();
+        console.log(taskStore.tasks);
     } else {
         router.push({ name: 'login' });
     }

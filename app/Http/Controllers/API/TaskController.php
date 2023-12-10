@@ -15,7 +15,7 @@ class TaskController extends Controller
                 'status' => 'success',
                 'cacheble' => false,
                 'info' => '',
-                'tasks' => Task::get()
+                'tasks' => Task::paginate(30)
             ];
         } catch (\Exception $e) {
             return [

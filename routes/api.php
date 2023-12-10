@@ -23,6 +23,7 @@ Route::get('/login', [LoginController::class,'login']);
 
 
 Route::prefix('task')->middleware(['auth:sanctum'])->group(function () {
+    Route::get('/', [TaskController::class, 'index']);
     Route::post('/create', [TaskController::class, 'create']);
 });
 
