@@ -2,37 +2,55 @@
     <div class="home">
         <center-layout>
             <v-card class="mx-auto" width="500" style="padding: 10px;">
-                <v-text-field label="Sua tarefa" hide-details="auto"></v-text-field>
-                <v-card style="margin-top: 10px; padding: 10px; display: flex; justify-content: center;" variant="outlined">
-                    <v-btn color="primary" class="mr-2" prepend-icon="mdi-plus">
-                        Cadastrar
-                    </v-btn>
-                    <v-btn color="info" prepend-icon="mdi-magnify">
-                        Buscar
-                    </v-btn>
-                </v-card>
+                <form @submit.prevent="create">
+                    <v-text-field ref="input_task" label="Sua tarefa" hide-details="auto" v-model="taskStore.form.title"></v-text-field>
+                    <v-card style="margin-top: 10px; padding: 10px; display: flex; justify-content: center;"
+                        variant="outlined">
+                        <v-btn type="submit" color="primary" class="mr-2" prepend-icon="mdi-plus" :loading="taskStore.loads.create" :disabled="taskStore.loads.create">
+                            Cadastrar
+                        </v-btn>
+                        <v-btn type="button" color="info" prepend-icon="mdi-magnify">
+                            Buscar
+                        </v-btn>
+                    </v-card>
+                </form>
+                <alert-erros :errors="taskStore.errors" class="mt-2"></alert-erros>
                 <card-row title="task 1" color="grey-lighten-2" class="mt-2">
-                    <button-tooltip text="Editar" location="top" color="warning" icon="mdi-square-edit-outline" class="mr-2"></button-tooltip>
-                    <button-tooltip text="Deletar" location="top" color="error" icon="mdi-delete" class="mr-2"></button-tooltip>
+                    <button-tooltip text="Editar" location="top" color="warning" icon="mdi-square-edit-outline"
+                        class="mr-2"></button-tooltip>
+                    <button-tooltip text="Deletar" location="top" color="error" icon="mdi-delete"
+                        class="mr-2"></button-tooltip>
                 </card-row>
             </v-card>
         </center-layout>
     </div>
 </template>
 
-<script>
-// @ is an alias to /src
-// import HelloWorld from '@/components/HelloWorld.vue'
+<script setup>
+import { onMounted, ref } from 'vue';
 import CenterLayout from '@/layouts/CenterLayout.vue';
 import CardRow from '@/components/Card/CardRow.vue';
 import ButtonTooltip from '@/components/Button/ButtonTooltip.vue';
+import AlertErros from '@/components/Alert/AlertErros.vue';
+import router from '@/router/index';
+import { useTaskStore } from '@/js/stores/task';
+const taskStore = useTaskStore();
 
-export default {
-    name: 'HomeView',
-    components: {
-        CenterLayout,
-        CardRow,
-        ButtonTooltip
-    }
+const input_task = ref(null);
+
+function create(){
+    taskStore.create();
+    taskStore.form.title = '';
+    input_task.value.focus();
 }
+
+onMounted(() => {
+    if (window.check()) {
+        taskStore.token = localStorage.getItem('token');
+    } else {
+        router.push({ name: 'login' });
+    }
+
+})
+
 </script>

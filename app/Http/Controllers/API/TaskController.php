@@ -8,33 +8,98 @@ use App\Http\Controllers\Controller;
 
 class TaskController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        try {
+            return [
+                'status' => 'success',
+                'cacheble' => false,
+                'info' => '',
+                'tasks' => Task::get()
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status' => 'error',
+                'cacheble' => false,
+                'info' => $e->getMessage(),
+                'error' => $e
+            ];
+        }
     }
     public function create(Request $request)
     {
+        $request->validate([
+            'title' => ['required', 'min:3']
+        ]);
+        Task::create([
+            'user_id' => $request->user()->id,
+            'title' => $request->title
+        ]);
+        return [
+            'status' => 'success',
+            'cacheble' => false,
+            'info' => ''
+        ];
+    }
+    public function update(Request $request)
+    {
         try {
-            Task::create([
+            Task::find($request->id)->update([
                 'title' => $request->title,
             ]);
             return [
                 'status' => 'success',
-                'cacheble'=>false,
+                'cacheble' => false,
+                'info' => ''
             ];
-        } catch (\Throwable $th) {
-            //throw $th;
+        } catch (\Exception $e) {
+            return [
+                'status' => 'error',
+                'cacheble' => false,
+                'info' => $e->getMessage(),
+                'error' => $e
+            ];
         }
     }
-    public function update()
+    public function conclued(Request $request)
     {
+        try {
+            Task::find($request->id)->update([
+                'conclued' => true,
+            ]);
+            return [
+                'status' => 'success',
+                'cacheble' => false,
+                'info' => ''
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status' => 'error',
+                'cacheble' => false,
+                'info' => $e->getMessage(),
+                'error' => $e
+            ];
+        }
     }
-    public function conclued()
+    public function delete(Request $request)
     {
+        try {
+            Task::find($request->id)->delete();
+            return [
+                'status' => 'success',
+                'cacheble' => false,
+                'info' => ''
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status' => 'error',
+                'cacheble' => false,
+                'info' => $e->getMessage(),
+                'error' => $e
+            ];
+        }
     }
-    public function delete()
-    {
-    }
-    private function search()
+    private function search(Request $request)
     {
     }
 }

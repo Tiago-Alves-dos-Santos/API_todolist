@@ -12,4 +12,8 @@ app
 .use(vuetify)
 .use(pinia);
 
+window.check = () => {
+    return localStorage.getItem('token') !== null && localStorage.getItem('token') !== undefined;
+}
+
 app.mount('#app');
