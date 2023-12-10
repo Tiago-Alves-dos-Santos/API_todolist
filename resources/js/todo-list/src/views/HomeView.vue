@@ -49,7 +49,7 @@ onMounted(() => {
     if (window.check()) {
         taskStore.token = localStorage.getItem('token');
         taskStore.read();
-        console.log(taskStore.tasks);
+        console.log(window.swAlert);
     } else {
         router.push({ name: 'login' });
     }
