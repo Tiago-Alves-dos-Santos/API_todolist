@@ -80,8 +80,24 @@ export const useTaskStore = defineStore('task', {
                 this.loads.update = -1;
             });
         },
-        delete() {
+        delete(id) {
             this.errors = {};
+            this.loads.delete = id;
+            axios({
+                headers: {
+                    'Authorization': `Bearer ${this.token}`
+                },
+                method: API.task.operations.delete.method,
+                url: API.task.operations.delete.url,
+                data: {
+                    id: id,
+                }
+            }).then(() => {
+                this.loads.delete = -1;
+            }).catch((error) => {
+                this.errors = error.response.data.errors;
+                this.loads.delete = -1;
+            });
         },
         search() {
             this.errors = {};

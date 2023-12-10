@@ -57,41 +57,23 @@ class TaskController extends Controller
     }
     public function conclued(Request $request)
     {
-        try {
-            Task::find($request->id)->update([
-                'conclued' => true,
-            ]);
-            return [
-                'status' => 'success',
-                'cacheble' => false,
-                'info' => ''
-            ];
-        } catch (\Exception $e) {
-            return [
-                'status' => 'error',
-                'cacheble' => false,
-                'info' => $e->getMessage(),
-                'error' => $e
-            ];
-        }
+        Task::find($request->id)->update([
+            'conclued' => true,
+        ]);
+        return [
+            'status' => 'success',
+            'cacheble' => false,
+            'info' => ''
+        ];
     }
     public function delete(Request $request)
     {
-        try {
-            Task::find($request->id)->delete();
-            return [
-                'status' => 'success',
-                'cacheble' => false,
-                'info' => ''
-            ];
-        } catch (\Exception $e) {
-            return [
-                'status' => 'error',
-                'cacheble' => false,
-                'info' => $e->getMessage(),
-                'error' => $e
-            ];
-        }
+        Task::find($request->id)->delete();
+        return [
+            'status' => 'success',
+            'cacheble' => false,
+            'info' => ''
+        ];
     }
     private function search(Request $request)
     {

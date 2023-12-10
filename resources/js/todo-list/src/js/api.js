@@ -24,7 +24,15 @@ API.task = {
         update: {
             method: 'PUT',
             url: API.url + 'task/update',
-        }
+        },
+        delete: {
+            method: 'DELETE',
+            url: API.url + 'task/delete',
+        },
+        conclued: {
+            method: 'PUT',
+            url: API.url + 'task/update',
+        },
     }
 };
 

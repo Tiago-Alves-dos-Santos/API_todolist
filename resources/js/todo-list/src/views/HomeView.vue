@@ -20,9 +20,10 @@
                 <card-row :title="value.title" color="grey-lighten-2" class="mt-2" v-for="value in taskStore.tasks.data"
                     :key="value.id">
                     <button-tooltip text="Editar" location="top" color="warning" icon="mdi-square-edit-outline" class="mr-2"
-                        @click="update(value)" :loading="taskStore.loads.update == value.id" :key="value.id"></button-tooltip>
-                    <button-tooltip text="Deletar" location="top" color="error" icon="mdi-delete"
-                        class="mr-2"></button-tooltip>
+                        @click="update(value)" :loading="taskStore.loads.update == value.id"
+                        :key="value.id"></button-tooltip>
+                    <button-tooltip text="Deletar" location="top" color="error" icon="mdi-delete" class="mr-2"
+                        @click="deleteTask(value)" :loading="taskStore.loads.delete == value.id"></button-tooltip>
                 </card-row>
             </v-card>
         </center-layout>
@@ -50,7 +51,6 @@ async function create() {
 }
 
 function update(value) {
-    console.log(value);
     Swal.fire({
         title: "Editar tarefa.",
         text: "A tarefa '" + value.title + "' está a ser editada.",
@@ -65,6 +65,23 @@ function update(value) {
     }).then((result) => {
         if (result.isConfirmed) {
             taskStore.update(value.id, result.value);
+            taskStore.read();
+            taskStore.form.title = '';
+            input_task.value.focus();
+        }
+    });
+}
+
+function deleteTask(value) {
+    Swal.fire({
+        title: "Do prosseguir com a deleção?",
+        text: "A tarefa '" + value.title + "' à ser deletada.",
+        showCancelButton: true,
+        confirmButtonText: "Cancelar",
+        cancelButtonText: "Deletar",
+    }).then((result) => {
+        if (result.isDismissed) { //deletar
+            taskStore.delete(value.id);
             taskStore.read();
             taskStore.form.title = '';
             input_task.value.focus();
