@@ -13,7 +13,8 @@ export const useTaskStore = defineStore('task', {
             },
             loads: {
                 create: false,
-                update: false,
+                update: -1,
+                delete: -1,
             },
             tasks: {},
             token: '',
@@ -59,20 +60,24 @@ export const useTaskStore = defineStore('task', {
                 this.loads.read = false;
             });
         },
-        update(id) {
+        update(id, newTitle) {
             this.errors = {};
-            this.loads.update = true;
+            this.loads.update = id;
             axios({
                 headers: {
                     'Authorization': `Bearer ${this.token}`
                 },
                 method: API.task.operations.update.method,
-                url: API.task.operations.update.url+'/'+id,
+                url: API.task.operations.update.url,
+                data: {
+                    id: id,
+                    title: newTitle
+                }
             }).then(() => {
-                this.loads.update = false;
+                this.loads.update = -1;
             }).catch((error) => {
                 this.errors = error.response.data.errors;
-                this.loads.update = false;
+                this.loads.update = -1;
             });
         },
         delete() {

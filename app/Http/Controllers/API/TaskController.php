@@ -43,23 +43,17 @@ class TaskController extends Controller
     }
     public function update(Request $request)
     {
-        try {
-            Task::find($request->id)->update([
-                'title' => $request->title,
-            ]);
-            return [
-                'status' => 'success',
-                'cacheble' => false,
-                'info' => ''
-            ];
-        } catch (\Exception $e) {
-            return [
-                'status' => 'error',
-                'cacheble' => false,
-                'info' => $e->getMessage(),
-                'error' => $e
-            ];
-        }
+        $request->validate([
+            'title' => ['required', 'min:3']
+        ]);
+        Task::find($request->id)->update([
+            'title' => $request->title,
+        ]);
+        return [
+            'status' => 'success',
+            'cacheble' => false,
+            'info' => ''
+        ];
     }
     public function conclued(Request $request)
     {
