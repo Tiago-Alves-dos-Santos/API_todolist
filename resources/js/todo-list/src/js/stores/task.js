@@ -38,7 +38,6 @@ export const useTaskStore = defineStore('task', {
             }).then(() => {
                 this.loads.create = false;
             }).catch((error) => {
-                console.log(error);
                 this.errors = error.response.data.errors;
                 this.loads.create = false;
             });

@@ -1,20 +1,25 @@
 <template>
     <div class="home">
         <center-layout>
-            <v-card class="mx-auto" width="500" style="padding: 10px;">
+            <v-card class="mx-auto card-center" style="padding: 10px;">
+                <div>
+                    <v-switch v-model="theme_toggle" :label="theme.global.current.value.dark ? 'Tema escuro' : 'Tema claro'"
+                        color="red-darken-3" value="red-darken-3" hide-details @change="toggleTheme"></v-switch>
+                </div>
                 <form @submit.prevent="create">
                     <v-text-field ref="input_task" label="Sua tarefa" hide-details="auto"
                         v-model="taskStore.form.title"></v-text-field>
-                    <v-card style="margin-top: 10px; padding: 10px; display: flex; justify-content: center;"
-                        variant="outlined">
-                        <v-btn type="submit" color="primary" class="mr-2" prepend-icon="mdi-plus"
-                            :loading="taskStore.loads.create" :disabled="taskStore.loads.create">
-                            Cadastrar
-                        </v-btn>
-                        <v-btn type="button" color="info" prepend-icon="mdi-magnify" @click="search"
-                            :loading="taskStore.loads.read" :disabled="taskStore.loads.read">
-                            Buscar
-                        </v-btn>
+                    <v-card class="d-flex flex-column mt-2 py-2 px-1" variant="outlined">
+                        <div class="d-flex justify-center">
+                            <v-btn type="submit" color="primary" class="mr-2" prepend-icon="mdi-plus"
+                                :loading="taskStore.loads.create" :disabled="taskStore.loads.create">
+                                Cadastrar
+                            </v-btn>
+                            <v-btn type="button" color="info" prepend-icon="mdi-magnify" @click="search"
+                                :loading="taskStore.loads.read" :disabled="taskStore.loads.read">
+                                Buscar
+                            </v-btn>
+                        </div>
                         <div>
                             <v-checkbox v-model="taskStore.form.concluded" label="Concluídas" color="success"
                                 @change="search" hide-details></v-checkbox>
@@ -22,7 +27,7 @@
                     </v-card>
                 </form>
                 <alert-erros :errors="taskStore.errors" class="mt-2"></alert-erros>
-                <card-row :title="value.title" :color="value.concluded ? 'green' : 'grey-lighten-2'" class="mt-2"
+                <card-row :title="value.title" :color="value.concluded ? 'green' : ''" class="mt-2"
                     v-for="value in taskStore.tasks.data" :key="value.id">
                     <div v-if="!value.concluded">
                         <button-tooltip text="Editar" location="top" color="warning" icon="mdi-square-edit-outline"
@@ -52,23 +57,29 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
+import { useTheme } from 'vuetify';
+import { useTaskStore } from '@/js/stores/task';
+import { useLoginStore } from '@/js/stores/login';
+import Swal from 'sweetalert2'
+import router from '@/router/index';
 import CenterLayout from '@/layouts/CenterLayout.vue';
 import CardRow from '@/components/Card/CardRow.vue';
 import ButtonTooltip from '@/components/Button/ButtonTooltip.vue';
 import AlertErros from '@/components/Alert/AlertErros.vue';
-import Swal from 'sweetalert2'
-import router from '@/router/index';
-import { useTaskStore } from '@/js/stores/task';
-import { useLoginStore } from '@/js/stores/login';
+
 const taskStore = useTaskStore();
 const loginStore = useLoginStore();
 
 const input_task = ref(null);
-
+const theme_toggle = ref(false);
+const theme = useTheme();
+function toggleTheme() {
+    theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
+}
 async function create() {
     taskStore.create();
-    await taskStore.read(filters(taskStore.tasks.current_page ?? 1));
     taskStore.form.title = '';
+    await taskStore.read(filters(taskStore.tasks.current_page ?? 1));
     input_task.value.focus();
 }
 
@@ -137,7 +148,7 @@ function filters(page) {
 function search() {
     taskStore.read(filters(taskStore.tasks.current_page ?? 1));
 }
-function logout(){
+function logout() {
     loginStore.logout();
 }
 
@@ -148,8 +159,17 @@ onMounted(() => {
     } else {
         router.push({ name: 'login' });
     }
-    // console.log(taskStore.tasks);
 
 })
 
 </script>
+
+<style lang="scss" scoped>
+div.card-center {
+    width: 350px;
+
+    @media (min-width: 500px) {
+        width: 700px;
+    }
+}
+</style>

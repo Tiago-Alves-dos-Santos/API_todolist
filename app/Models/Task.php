@@ -12,5 +12,4 @@ class Task extends Model
     protected $casts = [
         'concluded' => 'boolean',
     ];
-    //relacionamento
 }

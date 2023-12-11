@@ -8,7 +8,8 @@ export const useLoginStore = defineStore('login', {
             email: '',
             password: '',
             errors: {},
-            load: false
+            load: false,
+            auth: null
         }
     },
     actions: {

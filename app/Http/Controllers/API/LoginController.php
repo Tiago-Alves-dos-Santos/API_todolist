@@ -17,13 +17,12 @@ class LoginController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
-        $query = User::query();
-        $query->where('email', $request->email);
-        $user = $query->exists() ? $query->first() : false;
-        if($user && Hash::check($request->password, $user->password)){
-            Auth::login($user);
+
+        $credentials = $request->only('email', 'password');
+        if(Auth::attempt($credentials)){
+            $user = Auth::user();
             $user->tokens()->delete();
-            $token =  Auth::user()->createToken($this->token_key)->plainTextToken;
+            $token =  $user->createToken($this->token_key)->plainTextToken;
             Auth::logout();
             return [
                 'user' => $user,

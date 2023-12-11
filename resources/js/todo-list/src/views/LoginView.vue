@@ -1,7 +1,7 @@
 <template>
     <div class="home">
         <center-layout>
-            <v-card title="Login" class="mx-auto" width="500" style="padding: 10px;">
+            <v-card title="Login" class="card-center mx-auto" style="padding: 10px;">
                 <form @submit.prevent='logim'>
                     <v-text-field label="Email" hide-details="auto" variant="outlined" v-model="login.email"></v-text-field>
                     <password-input variant="outlined" class="mt-1" v-model="login.password"></password-input>
@@ -46,3 +46,12 @@ export default {
     }
 }
 </script>
+<style lang="scss" scoped>
+div.card-center {
+    width: 350px;
+
+    @media (min-width: 500px) {
+        width: 700px;
+    }
+}
+</style>
