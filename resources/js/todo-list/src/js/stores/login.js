@@ -8,7 +8,8 @@ export const useLoginStore = defineStore('login', {
             email: '',
             password: '',
             errors: {},
-            load: false
+            load: false,
+            auth: null
         }
     },
     actions: {
@@ -33,7 +34,8 @@ export const useLoginStore = defineStore('login', {
             });
         },
         logout() {
-
+            localStorage.removeItem('token');
+            router.push({ name: 'login' });
         }
     },
 })
