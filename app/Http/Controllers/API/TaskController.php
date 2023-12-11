@@ -10,21 +10,20 @@ class TaskController extends Controller
 {
     public function index(Request $request)
     {
-        try {
-            return [
-                'status' => 'success',
-                'cacheble' => false,
-                'info' => '',
-                'tasks' => Task::paginate(30)
-            ];
-        } catch (\Exception $e) {
-            return [
-                'status' => 'error',
-                'cacheble' => false,
-                'info' => $e->getMessage(),
-                'error' => $e
-            ];
+        $title = $request->title ?? '';
+        $concluded = $request->conclued ?? false;
+        $query = Task::query();
+        $query->where('user_id', $request->user()->id);
+        $query->where('title', 'like',"%$title%");
+        if($concluded){
+            $query->where('concluded',true);
         }
+        return [
+            'status' => 'success',
+            'cacheble' => false,
+            'info' => '',
+            'tasks' =>  $query->paginate(6)
+        ];
     }
     public function create(Request $request)
     {
@@ -75,7 +74,16 @@ class TaskController extends Controller
             'info' => ''
         ];
     }
-    private function search(Request $request)
+    private function search(Request $request, $limit_page)
     {
+        $title = $request->title ?? '';
+        $concluded = $request->conclued ?? false;
+        $query = Task::query();
+        $query->where('user_id', $request->user()->id);
+        $query->where('title', 'like',"%$title%");
+        if($concluded){
+            $query->where('concluded',true);
+        }
+        return $query->paginate($limit_page);
     }
 }

@@ -28,6 +28,11 @@
                     <button-tooltip text="Deletar" location="top" color="error" icon="mdi-delete" class="mr-2"
                         @click="deleteTask(value)" :loading="taskStore.loads.delete == value.id"></button-tooltip>
                 </card-row>
+                <div>
+                    <v-pagination v-model="taskStore.tasks.current_page" :length="taskStore.tasks.last_page" :total-visible="4"
+                        @update:modelValue="paginator"></v-pagination>
+
+                </div>
             </v-card>
         </center-layout>
     </div>
@@ -48,7 +53,7 @@ const input_task = ref(null);
 
 async function create() {
     taskStore.create();
-    await taskStore.read();
+    await taskStore.read(filters(taskStore.tasks.current_page ?? 1));
     taskStore.form.title = '';
     input_task.value.focus();
 }
@@ -68,7 +73,7 @@ function update(value) {
     }).then((result) => {
         if (result.isConfirmed) {
             taskStore.update(value.id, result.value);
-            taskStore.read();
+            taskStore.read(filters(taskStore.tasks.current_page ?? 1));
             taskStore.form.title = '';
             input_task.value.focus();
         }
@@ -85,7 +90,7 @@ function deleteTask(value) {
     }).then((result) => {
         if (result.isDismissed) { //deletar
             taskStore.delete(value.id);
-            taskStore.read();
+            taskStore.read(filters(taskStore.tasks.current_page ?? 1));
             taskStore.form.title = '';
             input_task.value.focus();
         }
@@ -93,9 +98,25 @@ function deleteTask(value) {
 }
 function conclued(value) {
     taskStore.conclued(value.id);
-    taskStore.read();
+    taskStore.read(filters(taskStore.tasks.current_page ?? 1));
     taskStore.form.title = '';
     input_task.value.focus();
+}
+
+function paginator(page) {
+    taskStore.read(filters(page));
+}
+
+function filters(page) {
+    const filter = [
+        { key: 'page', value: page },
+        { key: 'title', value: taskStore.form.title },
+    ];
+    const params = {};
+    filter.forEach(param => {
+        params[param.key] = param.value;
+    });
+    return new URLSearchParams(params).toString();
 }
 
 onMounted(() => {
@@ -105,6 +126,7 @@ onMounted(() => {
     } else {
         router.push({ name: 'login' });
     }
+    // console.log(taskStore.tasks);
 
 })
 

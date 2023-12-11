@@ -15,6 +15,7 @@ export const useTaskStore = defineStore('task', {
                 delete: -1,
                 conclude: -1,
             },
+            filters: {},
             tasks: {},
             token: '',
             errors: {}
@@ -42,15 +43,24 @@ export const useTaskStore = defineStore('task', {
             });
 
         },
-        async read() {
+        async read(filters = '') {
+            let request = API.task.operations.read.url;
+            if (filters) {
+                request = API.task.operations.read.url + '?' + filters
+                let currentURL = window.location.href;
+                // Pega apenas a parte da URL antes dos parâmetros - recarrega parametros
+                let updatedURL = currentURL.split('?')[0];
+                updatedURL = updatedURL +'?' +filters;
+                //"escreve no navegador"
+                history.pushState(null, null, updatedURL);
+            }
             this.errors = {};
-            this.loads.read = true;
             await axios({
                 headers: {
                     'Authorization': `Bearer ${this.token}`
                 },
                 method: API.task.operations.read.method,
-                url: API.task.operations.read.url,
+                url: request,
             }).then((response) => {
                 this.tasks = response.data.tasks;
                 this.loads.read = false;
@@ -98,7 +108,7 @@ export const useTaskStore = defineStore('task', {
                 this.loads.delete = -1;
             });
         },
-        conclued(id){
+        conclued(id) {
             this.errors = {};
             this.loads.conclude = id;
             axios({
