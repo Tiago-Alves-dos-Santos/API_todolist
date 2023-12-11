@@ -22,7 +22,7 @@ div.card-row {
 
         h3 {
             position: relative;
-            top: 10px;
+            line-height: 50px;
         }
     }
 }

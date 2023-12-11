@@ -8,14 +8,15 @@ export const useTaskStore = defineStore('task', {
             form: {
                 user_id: 0,
                 title: '',
+                concluded: false,
             },
             loads: {
                 create: false,
                 update: -1,
                 delete: -1,
                 conclude: -1,
+                read:false
             },
-            filters: {},
             tasks: {},
             token: '',
             errors: {}
@@ -44,6 +45,7 @@ export const useTaskStore = defineStore('task', {
 
         },
         async read(filters = '') {
+            this.loads.read = true;
             let request = API.task.operations.read.url;
             if (filters) {
                 request = API.task.operations.read.url + '?' + filters

@@ -33,7 +33,8 @@ export const useLoginStore = defineStore('login', {
             });
         },
         logout() {
-
+            localStorage.removeItem('token');
+            router.push({ name: 'login' });
         }
     },
 })

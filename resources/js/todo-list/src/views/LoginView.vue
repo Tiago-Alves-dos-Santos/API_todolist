@@ -41,6 +41,8 @@ export default {
 
     },
     mounted() {
+        this.login.email = '';
+        this.login.password = '';
     }
 }
 </script>

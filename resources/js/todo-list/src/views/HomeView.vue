@@ -11,27 +11,39 @@
                             :loading="taskStore.loads.create" :disabled="taskStore.loads.create">
                             Cadastrar
                         </v-btn>
-                        <v-btn type="button" color="info" prepend-icon="mdi-magnify" @click="search">
+                        <v-btn type="button" color="info" prepend-icon="mdi-magnify" @click="search"
+                            :loading="taskStore.loads.read" :disabled="taskStore.loads.read">
                             Buscar
                         </v-btn>
+                        <div>
+                            <v-checkbox v-model="taskStore.form.concluded" label="Concluídas" color="success"
+                                @change="search" hide-details></v-checkbox>
+                        </div>
                     </v-card>
                 </form>
                 <alert-erros :errors="taskStore.errors" class="mt-2"></alert-erros>
-                <card-row :title="value.title" color="grey-lighten-2" class="mt-2" v-for="value in taskStore.tasks.data"
-                    :key="value.id">
-                    <button-tooltip text="Editar" location="top" color="warning" icon="mdi-square-edit-outline" class="mr-2"
-                        @click="update(value)" :loading="taskStore.loads.update == value.id"
-                        :key="value.id"></button-tooltip>
-                    <button-tooltip text="Concluir" location="top" color="success" icon="mdi-check-bold" class="mr-2"
-                        @click="conclued(value)" :loading="taskStore.loads.conclude == value.id"
-                        :key="value.id"></button-tooltip>
-                    <button-tooltip text="Deletar" location="top" color="error" icon="mdi-delete" class="mr-2"
-                        @click="deleteTask(value)" :loading="taskStore.loads.delete == value.id"></button-tooltip>
+                <card-row :title="value.title" :color="value.concluded ? 'green' : 'grey-lighten-2'" class="mt-2"
+                    v-for="value in taskStore.tasks.data" :key="value.id">
+                    <div v-if="!value.concluded">
+                        <button-tooltip text="Editar" location="top" color="warning" icon="mdi-square-edit-outline"
+                            class="mr-2" @click="update(value)" :loading="taskStore.loads.update == value.id"
+                            :key="value.id"></button-tooltip>
+                        <button-tooltip text="Concluir" location="top" color="success" icon="mdi-check-bold" class="mr-2"
+                            @click="conclued(value)" :loading="taskStore.loads.conclude == value.id"
+                            :key="value.id"></button-tooltip>
+                        <button-tooltip text="Deletar" location="top" color="error" icon="mdi-delete" class="mr-2"
+                            @click="deleteTask(value)" :loading="taskStore.loads.delete == value.id"></button-tooltip>
+                    </div>
                 </card-row>
                 <div>
-                    <v-pagination v-model="taskStore.tasks.current_page" :length="taskStore.tasks.last_page" :total-visible="4"
-                        @update:modelValue="paginator"></v-pagination>
+                    <v-pagination v-model="taskStore.tasks.current_page" :length="taskStore.tasks.last_page"
+                        :total-visible="4" @update:modelValue="paginator"></v-pagination>
 
+                </div>
+                <div class="d-flex justify-end">
+                    <v-btn type="button" color="error" prepend-icon="mdi-exit-run" @click="logout">
+                        sair
+                    </v-btn>
                 </div>
             </v-card>
         </center-layout>
@@ -47,7 +59,9 @@ import AlertErros from '@/components/Alert/AlertErros.vue';
 import Swal from 'sweetalert2'
 import router from '@/router/index';
 import { useTaskStore } from '@/js/stores/task';
+import { useLoginStore } from '@/js/stores/login';
 const taskStore = useTaskStore();
+const loginStore = useLoginStore();
 
 const input_task = ref(null);
 
@@ -111,6 +125,7 @@ function filters(page) {
     const filter = [
         { key: 'page', value: page },
         { key: 'title', value: taskStore.form.title },
+        { key: 'concluded', value: taskStore.form.concluded },
     ];
     const params = {};
     filter.forEach(param => {
@@ -121,6 +136,9 @@ function filters(page) {
 
 function search() {
     taskStore.read(filters(taskStore.tasks.current_page ?? 1));
+}
+function logout(){
+    loginStore.logout();
 }
 
 onMounted(() => {
