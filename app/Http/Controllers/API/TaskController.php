@@ -22,7 +22,7 @@ class TaskController extends Controller
             'status' => 'success',
             'cacheble' => false,
             'info' => '',
-            'tasks' =>  $query->paginate(6)
+            'tasks' =>  $query->paginate(3)
         ];
     }
     public function create(Request $request)

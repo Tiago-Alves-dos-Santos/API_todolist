@@ -11,7 +11,7 @@
                             :loading="taskStore.loads.create" :disabled="taskStore.loads.create">
                             Cadastrar
                         </v-btn>
-                        <v-btn type="button" color="info" prepend-icon="mdi-magnify">
+                        <v-btn type="button" color="info" prepend-icon="mdi-magnify" @click="search">
                             Buscar
                         </v-btn>
                     </v-card>
@@ -117,6 +117,10 @@ function filters(page) {
         params[param.key] = param.value;
     });
     return new URLSearchParams(params).toString();
+}
+
+function search() {
+    taskStore.read(filters(taskStore.tasks.current_page ?? 1));
 }
 
 onMounted(() => {
